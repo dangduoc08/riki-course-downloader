@@ -1,0 +1,6 @@
+node_modules
+riki
+.DS_Store
+*.logs
+*.lock
+*.txt
