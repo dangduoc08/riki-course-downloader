@@ -11,6 +11,7 @@ const TMP_DIR = 'tmp'
 const SAVE_DIR = 'riki'
 const VIDEO_EXT = 'mp4'
 const DOWNLOAD_FINISH_EVENT = 'download_finish'
+const TIMEOUT = 45000
 
 const app = express()
 
@@ -23,13 +24,29 @@ const concatVideoCMD = (fileTXT, courseName, outputPath) => `ffmpeg -safe 0 -f c
 const getChunks = async url => {
   const { data: chunkFilenames } = await axios.get(url)
   const original = url.replace(chunkRegex, '')
-  return chunkFilenames.match(chunkRegex).map(filename => original + filename)
+  const chunks = chunkFilenames.match(chunkRegex).reduce((prev, cur, index) => ({
+    ...prev,
+    [original + cur]: index
+  }), {})
+
+  return chunks
 }
 
-const download = (courseName, chunkFilenames = [], event) => {
-  let counter = 0
-  return chunkFilenames
-    .map((chunkURL, index) => {
+const download = (courseName, counter = 0, total = 0, chunkFilenames = {}, event) => {
+  const start = new Date().getTime()
+
+  const watcher = setInterval(() => {
+    if (new Date().getTime() - start >= TIMEOUT && counter < total) {
+      clearInterval(watcher)
+      // retry
+      download(courseName, counter, total, chunkFilenames, event)
+    }
+  }, 5000)
+
+  return Object.keys(chunkFilenames)
+    .map(chunkURL => {
+      const index = chunkFilenames[chunkURL]
+
       return axios({
         method: 'GET',
         url: chunkURL,
@@ -44,9 +61,11 @@ const download = (courseName, chunkFilenames = [], event) => {
             fs.appendFileSync(txt(courseName), `file ${__dirname}${localTmpFilePathWillWrite}\n`)
             writeToTmp.end()
             counter++
-            console.log(courseName, counter)
-            if (counter === chunkFilenames.length - 1) {
+            delete chunkFilenames[chunkURL]
+
+            if (counter === total) {
               event.emit(DOWNLOAD_FINISH_EVENT)
+              clearInterval(watcher)
             }
           })
 
@@ -83,13 +102,14 @@ app.post('/downloads', async (req, res) => {
     url = url.trim()
     courseName = courseName.trim()
 
-    const chunkFilenames = await getChunks(url)
+    const chunks = await getChunks(url)
 
     const fileTXT = txt(courseName)
     fs.openSync(fileTXT, 'w')
 
     const finish = new EventEmitter()
-    Promise.all(download(courseName, chunkFilenames, finish))
+    const total = Object.keys(chunks).length
+    Promise.all(download(courseName, 0, total, chunks, finish))
 
     finish.once(DOWNLOAD_FINISH_EVENT, (a) => {
       console.log('1 >>> chunks was downloaded')
@@ -117,7 +137,7 @@ app.post('/downloads', async (req, res) => {
     })
 
     res.json({
-      total_chunks: chunkFilenames.length
+      total_chunks: total
     })
   } catch (err) {
     res.json({
