@@ -14,6 +14,7 @@
   <script defer src='./socket.js'></script>
   <script defer src='./get_downloading.js'></script>
   <script defer src='./get_videos.js'></script>
+  <link href='./style.css' rel='stylesheet' />
   <title>Download Riki Courses</title>
 </head>
 
@@ -25,11 +26,11 @@
         <input required type="url" class="form-control" id="url" placeholder="https://***.index.m3u8">
       </div>
       <div class="mb-3">
-        <label for="course_name" class="form-label">Name</label>
-        <input required type="input" class="form-control" id="course_name" placeholder="Course name...">
+        <label for="course_name" class="form-label">Tên</label>
+        <input required type="input" class="form-control" id="course_name" placeholder="Tên khoá học...">
       </div>
       <div class="col-auto">
-        <button id="download-btn" type="submit" class="btn btn-primary mb-3">Download</button>
+        <button id="download-btn" type="submit" class="btn btn-primary mb-3">Yêu cầu tải</button>
       </div>
 
       <div id="percent">

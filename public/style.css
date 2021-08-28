@@ -1,0 +1,24 @@
+#video-all {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.video-wrapper {
+  width: 350px;
+  margin-right: 32px;
+}
+
+.video-title {
+  padding: 0 8px;
+  font-size: 16px;
+  font-weight: 500;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.btn-download {
+  margin-left: 8px;
+  margin-top: 8px;
+}
