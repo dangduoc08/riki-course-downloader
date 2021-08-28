@@ -9,7 +9,11 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
     crossorigin="anonymous"></script>
+  <script src="/socket.io/socket.io.js"></script>
   <script defer src='./script.js'></script>
+  <script defer src='./socket.js'></script>
+  <script defer src='./get_downloading.js'></script>
+  <script defer src='./get_videos.js'></script>
   <title>Download Riki Courses</title>
 </head>
 
@@ -26,6 +30,12 @@
       </div>
       <div class="col-auto">
         <button id="download-btn" type="submit" class="btn btn-primary mb-3">Download</button>
+      </div>
+
+      <div id="percent">
+      </div>
+
+      <div id="video-all">
       </div>
   </div>
   </form>
