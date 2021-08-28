@@ -7,7 +7,6 @@ const morgan = require('morgan')
 const cors = require('cors')
 const axios = require('axios')
 const { v4 } = require('uuid')
-const chalk = require('chalk')
 const CronJob = require('cron').CronJob
 
 function nonAccentVietnamese(str) {
@@ -183,7 +182,7 @@ app.post('/downloads', async (req, res) => {
         if (err) {
           return console.log(err.message)
         }
-        console.log(chalk.bold.bgHex('#0d6efd').white(` ${courseName} has downloaded `))
+        console.log(`${courseName} has downloaded`)
         delete global.videos[uuidv4]
         sockets.forEach(socket => {
           socket.emit(DOWNLOAD_FINISH_EVENT, {

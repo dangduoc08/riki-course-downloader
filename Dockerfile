@@ -5,15 +5,14 @@ WORKDIR /home/code
 RUN apt-get update \ 
   && apt-get install -y ffmpeg \
   && mkdir riki \
-  && mkdir temp
+  && mkdir tmp
 
 VOLUME /home/code/riki
 
 COPY . .
 
-RUN npm install -g -f pm2 \
-  && npm install
+RUN npm install
 
 EXPOSE 3006
 
-CMD [ "pm2", "start", "index.js"]
+CMD [ "npm", "run", "start"]

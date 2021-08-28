@@ -1,10 +1,10 @@
 {
   "scripts": {
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "start": "node index.js"
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "chalk": "^4.1.2",
     "cors": "^2.8.5",
     "cron": "^1.8.2",
     "express": "^4.17.1",
